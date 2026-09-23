@@ -18,7 +18,7 @@ Vercel's Flask runtime discovers the root `app.py` WSGI object and installs Flas
 - Flask test-client smoke checks returned 200 for all five pages, CSS, JavaScript, and the resume PDF. JavaScript syntax checks and `git diff --check` passed.
 - The first Vercel build published only the `public/` files because the existing project's Framework preset was `Other`, which disabled Flask detection. Set the Vercel project preset to Flask; a subsequent Vercel build produced the Python function from `app.py`.
 - Preview and production checks returned 200 for Home, Projects, Experience, About, Contact, CSS, JavaScript, and the resume PDF. Production HTML contains the expected portfolio title and terminal content; the PDF response begins with the `%PDF` signature.
-- Production is available at `https://ultra-maxing-portfolio.vercel.app` (deployment `dpl_2eNAcAHrzHvaQdnm2kXYLhpwbZbg`).
+- Production is available at `https://ultra-maxing-portfolio.vercel.app`.
 - The first function exclusion override was invalid for this zero-configuration Flask entry point and was removed. No custom routing configuration is required.
 
 ### Git state
