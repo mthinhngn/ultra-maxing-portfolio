@@ -1,4 +1,4 @@
-const desktopMedia = window.matchMedia('(min-width: 1000px)');
+const desktopMedia = window.matchMedia('(min-width: 601px)');
 const video = document.querySelector('#terminal-scene');
 const motionToggle = document.querySelector('#scene-toggle');
 

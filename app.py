@@ -21,7 +21,7 @@ def create_app() -> Flask:
 
     @app.get("/")
     def home() -> str:
-        return render_template("index.html")
+        return render_template("index.html", projects=PROJECTS, experience=EXPERIENCE)
 
     @app.get("/projects")
     def projects() -> str:
@@ -42,6 +42,11 @@ def create_app() -> Flask:
     @app.get("/contact")
     def contact() -> str:
         return render_template("contact.html")
+
+    @app.get("/resume")
+    def resume() -> str:
+        resume_url = url_for("static", filename="documents/ThinhNguyenResume2027.pdf")
+        return render_template("resume.html", resume_url=resume_url)
 
     return app
 

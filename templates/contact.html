@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Contact | Thinh Nguyen{% endblock %}
+{% block title %}Contact | thinhdegoat{% endblock %}
 
 {% block content %}
   <section class="page-content contact" aria-labelledby="page-title">
@@ -10,11 +10,11 @@
       <p>Interested in backend, infrastructure, platform, and hardware-adjacent software opportunities.</p>
     </header>
 
-    <a class="email" href="mailto:mthinhngn@gmail.com">mthinhngn@gmail.com</a>
+    <a class="email contact-email" href="mailto:mthinhngn@gmail.com">mthinhngn@gmail.com</a>
     <nav class="contact-links" aria-label="External profiles">
-      <a href="https://github.com/mthinhngn" target="_blank" rel="noreferrer">GitHub -&gt;</a>
-      <a href="https://linkedin.com/in/mthinhngn" target="_blank" rel="noreferrer">LinkedIn -&gt;</a>
-      <a href="{{ url_for('static', filename='documents/ThinhNguyenResume2027.pdf') }}" download>Resume [download]</a>
+      <a class="contact-link contact-link-github" href="https://github.com/mthinhngn" target="_blank" rel="noreferrer">GitHub -&gt;</a>
+      <a class="contact-link contact-link-linkedin" href="https://linkedin.com/in/mthinhngn" target="_blank" rel="noreferrer">LinkedIn -&gt;</a>
+      <a class="contact-link contact-link-resume" href="{{ url_for('resume') }}">Resume ↗</a>
     </nav>
   </section>
 {% endblock %}

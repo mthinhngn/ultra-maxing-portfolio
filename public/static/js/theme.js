@@ -1,11 +1,17 @@
 (() => {
   const root = document.documentElement;
   const storageKey = 'portfolio-theme';
+  const favicon = document.querySelector('#site-favicon');
+  const updateFavicon = () => {
+    if (!favicon) return;
+    favicon.href = root.dataset.theme === 'dark' ? favicon.dataset.darkIcon : favicon.dataset.lightIcon;
+  };
   try {
-    root.dataset.theme = localStorage.getItem(storageKey) === 'light' ? 'light' : 'dark';
+    root.dataset.theme = localStorage.getItem(storageKey) === 'dark' ? 'dark' : 'light';
   } catch {
-    root.dataset.theme = 'dark';
+    root.dataset.theme = 'light';
   }
+  updateFavicon();
 
   document.addEventListener('DOMContentLoaded', () => {
     const button = document.querySelector('#theme-toggle');
@@ -19,6 +25,7 @@
     updateControl();
     button.addEventListener('click', () => {
       root.dataset.theme = root.dataset.theme === 'light' ? 'dark' : 'light';
+      updateFavicon();
       try {
         localStorage.setItem(storageKey, root.dataset.theme);
       } catch {

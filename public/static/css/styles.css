@@ -9,6 +9,10 @@
   --accent: #8cdce2;
   --green: #91c79b;
   --error: #ef8a8a;
+  --contact-email: #43dce8;
+  --contact-github: #c084fc;
+  --contact-linkedin: #42df83;
+  --contact-resume: #ff5f87;
   --mono: Consolas, "Liberation Mono", "Courier New", monospace;
   --sans: "Segoe UI", Arial, sans-serif;
 }
@@ -201,6 +205,10 @@ body {
   --accent: #264da6;
   --green: #33764a;
   --error: #a42d3c;
+  --contact-email: #264da6;
+  --contact-github: #675a91;
+  --contact-linkedin: #3c7451;
+  --contact-resume: #a34f69;
 }
 
 [data-theme="light"] .theme-knob { transform: translateX(22px); }
@@ -849,6 +857,12 @@ summary:focus-visible {
   font-family: var(--mono);
   font-size: 16px;
 }
+
+.contact .email { color: var(--contact-email); }
+.contact-links .contact-link-github { color: var(--contact-github); }
+.contact-links .contact-link-linkedin { color: var(--contact-linkedin); }
+.contact-links .contact-link-resume { color: var(--contact-resume); }
+.contact-links .contact-link:hover { text-decoration-thickness: 2px; }
 
 .site-footer {
   min-height: 74px;

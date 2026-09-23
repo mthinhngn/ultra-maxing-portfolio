@@ -1,0 +1,137 @@
+.resume-page {
+  min-height: 100dvh;
+  background-color: var(--bg);
+}
+
+.resume-page .terminal-scene {
+  opacity: 0.22;
+}
+
+.resume-page .scroll-trace {
+  display: none;
+}
+
+.resume-page .resume-header.shell {
+  display: block;
+  width: min(77vw, 1200px);
+  max-width: 1200px;
+  min-height: 0;
+  margin: 58px auto 24px;
+}
+
+.resume-header-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.resume-page .resume-header h1 {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: clamp(30px, 3vw, 36px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.resume-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.5;
+  text-transform: lowercase;
+}
+
+.resume-actions a {
+  color: var(--muted);
+  text-underline-offset: 5px;
+}
+
+.resume-actions a:hover {
+  color: var(--accent);
+}
+
+.resume-actions .resume-action-open { color: var(--contact-email); }
+.resume-actions .resume-action-download { color: var(--contact-resume); }
+
+.resume-back {
+  margin-top: 5px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.5;
+  text-decoration-color: var(--line);
+  text-underline-offset: 5px;
+  white-space: nowrap;
+}
+
+.resume-back:hover,
+.resume-back:focus-visible {
+  color: var(--accent);
+}
+
+.resume-page .resume-viewer.shell {
+  width: min(77vw, 1200px);
+  max-width: 1200px;
+  margin: 0 auto 48px;
+}
+
+.resume-document {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 38px rgb(20 28 38 / 0.12);
+}
+
+.resume-document img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.resume-page .scene-controls.shell {
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  z-index: 4;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  gap: 12px;
+}
+
+.resume-page #scene-toggle {
+  font-size: 11px;
+}
+
+@media (max-width: 720px) {
+  .resume-page .resume-header.shell {
+    width: calc(100% - 32px);
+    margin-top: 42px;
+    padding-right: 0;
+  }
+
+  .resume-back {
+    margin-top: 3px;
+    font-size: 11px;
+  }
+
+  .resume-page .resume-viewer.shell {
+    width: calc(100% - 32px);
+  }
+
+  .resume-document { border-radius: 8px; }
+
+  .resume-page .scene-controls.shell {
+    top: 10px;
+    right: 16px;
+  }
+}

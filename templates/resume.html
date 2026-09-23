@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Resume | thinhdegoat{% endblock %}
+{% block body_class %}resume-page{% endblock %}
+
+{% block header %}
+  <header class="resume-header shell">
+    <div class="resume-header-content">
+      <div>
+        <h1 id="resume-title">Resume</h1>
+        <nav class="resume-actions" aria-label="Resume actions">
+          <a class="resume-action-open" href="{{ resume_url }}" target="_blank" rel="noopener">Open full size <span aria-hidden="true">↗</span></a>
+          <a class="resume-action-download" href="{{ resume_url }}" download="ThinhNguyenResume2027.pdf">Download</a>
+        </nav>
+      </div>
+      <a class="resume-back" href="{{ url_for('home') }}"><span aria-hidden="true">← </span>Back to portfolio</a>
+    </div>
+  </header>
+{% endblock %}
+
+{% block content %}
+  <section class="resume-viewer shell" aria-labelledby="resume-title">
+    <div class="resume-document">
+      <img
+        src="{{ url_for('static', filename='images/resume-preview.png') }}"
+        alt="Preview of Thinh Nguyen's one-page resume. Use Open full size or Download to access the PDF."
+        width="1400"
+        height="1812">
+    </div>
+  </section>
+{% endblock %}
+
+{% block footer %}{% endblock %}
