@@ -6,7 +6,7 @@
 
 - Moved browser assets from `static/` to `public/static/` so Vercel can serve them from its CDN, including the downloadable resume.
 - Pointed Flask's existing `static` endpoint at `public/static`, preserving the `/static/...` paths used by templates during local development.
-- Added `.python-version` for Python 3.12 and `vercel.json` to exclude CDN-served assets and project-only skills from the Flask function bundle.
+- Added `.python-version` for Python 3.12. Vercel's Flask zero-configuration runtime serves `public/**` assets directly and discovers the root Flask app without a custom routing configuration.
 - Replaced the starter README with the portfolio architecture, local run steps, and Vercel deployment commands.
 
 ### Architecture and trade-offs
@@ -16,11 +16,12 @@ Vercel's Flask runtime discovers the root `app.py` WSGI object and installs Flas
 ### Verification performed
 
 - Flask test-client smoke checks returned 200 for all five pages, CSS, JavaScript, and the resume PDF. JavaScript syntax checks and `git diff --check` passed.
+- The first Vercel build rejected a function exclusion override because the zero-configuration Flask app has no `api/` serverless function. Removed that unnecessary override; retry pending.
 - Pending: confirm Vercel CLI build and production behavior after account authentication.
 
 ### Git state
 
-Pending: commit and push the deployment-ready portfolio to the configured `origin` repository.
+The initial deployment commit is pushed to `origin/main`. Follow-up Vercel configuration corrections and deployment verification remain in progress.
 
 ## 2026-09-22 - Scroll-linked terminal trace
 

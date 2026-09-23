@@ -17,7 +17,7 @@ Open `http://127.0.0.1:5000`.
 
 ## Deploy to Vercel
 
-Vercel detects the Flask application from `app.py` and installs the dependency in `requirements.txt`. `.python-version` selects Python 3.12. Public files live under `public/`, where Vercel serves them from its CDN. The Flask static endpoint is also configured to read from `public/static`, keeping local `/static/...` URLs consistent. `vercel.json` excludes the static assets and project-only skills from the server function bundle because Vercel serves the assets separately.
+Vercel detects the Flask application from `app.py` and installs the dependency in `requirements.txt`. `.python-version` selects Python 3.12. Public files live under `public/`, where Vercel serves them from its CDN. The Flask static endpoint is also configured to read from `public/static`, keeping local `/static/...` URLs consistent.
 
 To deploy a preview with the Vercel CLI:
 
