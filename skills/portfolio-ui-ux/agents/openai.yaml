@@ -1,0 +1,4 @@
+interface:
+  display_name: "Portfolio UI/UX"
+  short_description: "Design a minimal terminal-inspired portfolio"
+  default_prompt: "Use $portfolio-ui-ux to design or refine my portfolio interface."

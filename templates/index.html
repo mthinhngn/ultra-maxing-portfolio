@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block body_class %}home-page{% endblock %}
+
+{% block content %}
+  <section class="terminal-home" aria-labelledby="name">
+    <div class="terminal-frame">
+      <div class="terminal-title" aria-hidden="true">
+        <span class="terminal-rule"></span>
+        <span class="terminal-brand">PORTFOLIO <span class="terminal-version">THINH NGUYEN · v1.0.0</span></span>
+        <span class="terminal-rule"></span>
+      </div>
+
+      <div class="terminal-grid">
+        <div class="identity-panel">
+          <p class="welcome">Welcome to my portfolio.</p>
+          <h1 id="name">
+            <span class="sr-only">Thinh Nguyen</span>
+            <img src="{{ url_for('static', filename='images/name.svg') }}" alt="" width="432" height="213">
+          </h1>
+          <p class="role">COMPUTER ENGINEERING STUDENT<br>INFRASTRUCTURE / DISTRIBUTED SYSTEMS / APPLIED AI</p>
+          <p class="path">C:\Users\thinh\portfolio</p>
+        </div>
+
+        <div class="route-panel">
+          <div>
+            <p class="panel-label">AVAILABLE ROUTES</p>
+            <p class="route-intro">Type a command below or open a route directly.</p>
+            <nav class="command-nav" aria-label="Terminal routes">
+              <a href="{{ url_for('projects') }}"><span>/project</span><span>Selected builds</span></a>
+              <a href="{{ url_for('experience') }}"><span>/experience</span><span>Research and engineering</span></a>
+              <a href="{{ url_for('about') }}"><span>/about</span><span>Background and skills</span></a>
+              <a href="{{ url_for('contact') }}"><span>/contact</span><span>Start a conversation</span></a>
+            </nav>
+          </div>
+
+          <div class="session-status">
+            <p class="panel-label">CURRENT SESSION</p>
+            <h2>Building things that hold up.<span class="cursor" aria-hidden="true">_</span></h2>
+            <p>Working across providers, devices, and imperfect networks.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="terminal-output" aria-label="Terminal introduction">
+      <p><span class="accent">portfolio:</span> Computer engineering at San José State University.</p>
+      <p><span class="accent">focus:</span> Backend, infrastructure, platform, and AI agents.</p>
+      <p><span class="accent">status:</span> Open to opportunities.</p>
+    </div>
+
+    <div class="prompt-area">
+      <div id="terminal-log" class="terminal-log" aria-live="polite"></div>
+      <form
+        class="prompt"
+        role="search"
+        aria-label="Navigate portfolio"
+        data-route-home="{{ url_for('home') }}"
+        data-route-projects="{{ url_for('projects') }}"
+        data-route-experience="{{ url_for('experience') }}"
+        data-route-about="{{ url_for('about') }}"
+        data-route-contact="{{ url_for('contact') }}"
+      >
+        <label for="command"><span aria-hidden="true">&gt;</span><span class="sr-only">Portfolio command</span></label>
+        <input id="command" name="command" placeholder="Type /project or /help" aria-describedby="command-hint" autocomplete="off" spellcheck="false">
+        <button type="submit" aria-label="Run command">ENTER</button>
+      </form>
+      <p id="command-hint" class="command-hint">Commands: /project /experience /about /contact /help</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block footer %}{% endblock %}

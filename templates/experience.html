@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Experience | Thinh Nguyen{% endblock %}
+
+{% block content %}
+  <section class="page-content" aria-labelledby="page-title">
+    <header class="page-heading">
+      <p class="breadcrumb">thinh@portfolio:~$ cat /experience.log</p>
+      <h1 id="page-title"><span class="prompt-mark">&gt;</span> Experience</h1>
+      <p>Research, infrastructure, and software that meets real systems.</p>
+    </header>
+
+    <div class="experience-list">
+      {% for job in experience %}
+        <article class="experience-row">
+          <p class="experience-date">{{ job.date }}</p>
+          <div>
+            <h2>{{ job.organization }}</h2>
+            <p class="job-role">{{ job.role }}</p>
+            <p>{{ job.description }}</p>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

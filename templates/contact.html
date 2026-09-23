@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Contact | Thinh Nguyen{% endblock %}
+
+{% block content %}
+  <section class="page-content contact" aria-labelledby="page-title">
+    <header class="page-heading">
+      <p class="breadcrumb">thinh@portfolio:~$ open /contact</p>
+      <h1 id="page-title"><span class="prompt-mark">&gt;</span> Let's build something reliable.</h1>
+      <p>Interested in backend, infrastructure, platform, and hardware-adjacent software opportunities.</p>
+    </header>
+
+    <a class="email" href="mailto:mthinhngn@gmail.com">mthinhngn@gmail.com</a>
+    <nav class="contact-links" aria-label="External profiles">
+      <a href="https://github.com/mthinhngn" target="_blank" rel="noreferrer">GitHub -&gt;</a>
+      <a href="https://linkedin.com/in/mthinhngn" target="_blank" rel="noreferrer">LinkedIn -&gt;</a>
+      <a href="{{ url_for('static', filename='documents/ThinhNguyenResume2027.pdf') }}" download>Resume [download]</a>
+    </nav>
+  </section>
+{% endblock %}

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Thinh Nguyen, Computer Engineering at SJSU. Building reliable infrastructure, distributed systems, and applied AI.">
+  <title>{% block title %}Thinh Nguyen | Systems &amp; Infrastructure{% endblock %}</title>
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script src="{{ url_for('static', filename='js/terminal.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/scroll-motion.js') }}" defer></script>
+  <script type="module" src="{{ url_for('static', filename='js/scene.js') }}"></script>
+</head>
+<body class="{% block body_class %}interior-page{% endblock %}">
+  <div class="terminal-scene" aria-hidden="true">
+    <video id="terminal-scene" muted loop playsinline preload="none" tabindex="-1" data-source="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_084718_72a17915-4964-4059-afcd-22d59399b72e.mp4"></video>
+  </div>
+  <div class="scroll-trace" aria-hidden="true" hidden>
+    <span class="scroll-trace-label">SCROLL</span>
+    <svg viewBox="0 0 12 132" focusable="false">
+      <path class="scroll-trace-rail" pathLength="1" d="M6 2V130" />
+      <path class="scroll-trace-progress" pathLength="1" d="M6 2V130" />
+      <path class="scroll-trace-pulse" pathLength="1" d="M6 2V130" />
+    </svg>
+    <span class="scroll-trace-value">00%</span>
+  </div>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header shell">
+    <a class="wordmark" href="{{ url_for('home') }}">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span>thinh@portfolio</span>
+      <span class="muted">: ~</span>
+    </a>
+    <nav class="site-nav" aria-label="Portfolio pages">
+      <a href="{{ url_for('projects') }}" {% if request.endpoint == 'projects' %}aria-current="page"{% endif %}>/projects</a>
+      <a href="{{ url_for('experience') }}" {% if request.endpoint == 'experience' %}aria-current="page"{% endif %}>/experience</a>
+      <a href="{{ url_for('about') }}" {% if request.endpoint == 'about' %}aria-current="page"{% endif %}>/about</a>
+      <a href="{{ url_for('contact') }}" {% if request.endpoint == 'contact' %}aria-current="page"{% endif %}>/contact</a>
+    </nav>
+    <a class="resume-link" href="{{ url_for('static', filename='documents/ThinhNguyenResume2027.pdf') }}" download>Download resume</a>
+  </header>
+  <main id="main-content" class="shell">
+    {% block content %}{% endblock %}
+  </main>
+  <div class="scene-controls shell">
+    <button id="scene-toggle" type="button" aria-pressed="false" hidden>Motion: paused</button>
+    <button id="theme-toggle" class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Light theme" title="Switch to light theme" hidden>
+      <svg class="theme-day" viewBox="0 0 24 24" aria-hidden="true"><circle cx="14" cy="9" r="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M14 1v2m0 12v2M6 9H4m20 0h-2M8 3l1.5 1.5M20 3l-1.5 1.5" stroke="currentColor" stroke-width="1.7"/><path d="M5 20a4 4 0 1 1 1-7.9 5 5 0 0 1 9.5 1.9h1a3 3 0 1 1 0 6Z" fill="currentColor"/></svg>
+      <svg class="theme-night" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3a9 9 0 1 0 5 15A8 8 0 0 1 16 3Z" fill="currentColor"/><path d="m20 3 .7 2.3L23 6l-2.3.7L20 9l-.7-2.3L17 6l2.3-.7Z" fill="currentColor"/></svg>
+      <span class="theme-knob" aria-hidden="true"></span>
+    </button>
+  </div>
+  {% block footer %}
+    <footer class="shell site-footer">
+      <span>© 2026 Thinh Nguyen</span>
+      <a href="{{ url_for('home') }}">Return home</a>
+      <span class="muted">End of output.</span>
+    </footer>
+  {% endblock %}
+</body>
+</html>

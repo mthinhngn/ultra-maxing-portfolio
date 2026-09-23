@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}About | Thinh Nguyen{% endblock %}
+
+{% block content %}
+  <section class="page-content" aria-labelledby="page-title">
+    <header class="page-heading">
+      <p class="breadcrumb">thinh@portfolio:~$ whoami</p>
+      <h1 id="page-title"><span class="prompt-mark">&gt;</span> About</h1>
+      <p>Where software meets the real world.</p>
+    </header>
+
+    <div class="about-grid">
+      <div class="about-copy">
+        <p class="about-lead">I build dependable software for conditions that are not always dependable.</p>
+        <p>My work spans backend services, deployment infrastructure, distributed Android systems, and vehicle software testing.</p>
+        <div class="education">
+          <p class="group-label">EDUCATION</p>
+          <h2>San José State University</h2>
+          <p>B.S. Computer Engineering<br>Expected December 2027</p>
+        </div>
+      </div>
+
+      <dl class="skills">
+        <div><dt>Languages</dt><dd>Python, Java, C++, JavaScript / TypeScript, Go, Bash</dd></div>
+        <div><dt>Backend &amp; data</dt><dd>FastAPI, Node.js, Express.js, Flask, PostgreSQL, Redis</dd></div>
+        <div><dt>Infrastructure</dt><dd>Docker, Kubernetes, Terraform, Linux, AWS, GCP, CI/CD</dd></div>
+        <div><dt>Observability</dt><dd>Prometheus, Grafana</dd></div>
+      </dl>
+    </div>
+  </section>
+{% endblock %}
