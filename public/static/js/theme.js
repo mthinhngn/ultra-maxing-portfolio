@@ -26,7 +26,7 @@
       button.classList.remove('is-animating');
     };
     const playAnimation = (theme) => {
-      if (!animation || compactScreen.matches || reducedMotion.matches) return;
+      if (!animation || compactScreen.matches) return;
       stopAnimation();
       animation.src = theme === 'dark' ? animation.dataset.toNight : animation.dataset.toDay;
       animation.playbackRate = reducedMotion.matches ? 2 : 1;
