@@ -18,6 +18,7 @@
     if (!button) return;
     const animation = button.querySelector('.theme-animation');
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    const compactScreen = matchMedia('(max-width: 600px)');
     const stopAnimation = () => {
       if (!animation) return;
       animation.pause();
@@ -25,7 +26,7 @@
       button.classList.remove('is-animating');
     };
     const playAnimation = (theme) => {
-      if (!animation) return;
+      if (!animation || compactScreen.matches || reducedMotion.matches) return;
       stopAnimation();
       animation.src = theme === 'dark' ? animation.dataset.toNight : animation.dataset.toDay;
       animation.playbackRate = reducedMotion.matches ? 2 : 1;

@@ -187,6 +187,9 @@ body.home-page {
 .home-page .theme-toggle svg { top: 3px; right: auto; left: 3px; width: 24px; height: 24px; }
 .home-page .theme-knob { display: none; }
 .home-page .theme-animation { top: -3px; left: -3px; width: 36px; height: 36px; }
+.home-page .theme-toggle svg { transition: opacity 180ms ease, transform 180ms ease; }
+:root[data-theme="dark"] .home-page .theme-day { transform: rotate(-45deg) scale(0.7); }
+:root[data-theme="light"] .home-page .theme-night { transform: rotate(45deg) scale(0.7); }
 .terminal-maximize-control {
   display: grid;
   width: 30px;
@@ -449,6 +452,7 @@ body.home-page {
 }
 #command-options::-webkit-scrollbar { display: none; }
 #command-options [role="option"] { display: grid; grid-template-columns: minmax(130px, 40%) 1fr; min-height: 26px; align-items: center; padding: 1px 14px; border-left: 2px solid transparent; color: var(--terminal-muted); cursor: pointer; }
+#command-options [role="option"][hidden] { display: none; }
 #command-options [aria-selected="true"] { border-left-color: var(--terminal-reply); background: transparent; color: var(--terminal-reply); }
 
 #portfolio-prompt { display: flex; align-items: center; gap: 12px; min-height: 46px; border-block: 1px solid var(--terminal-border); }

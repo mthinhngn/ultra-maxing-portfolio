@@ -45,10 +45,32 @@ function initializePortfolio(form) {
   let selected = 0;
   let activeTyping = null;
   let activeGeneration = null;
-  let explicitSuggestionSelection = false;
+
+  function matchingOptions() {
+    return options.filter(option => !option.hidden);
+  }
+
+  function filterOptions() {
+    const query = normalizeQuery(input.value.replace(/^\s*\/+/, ''));
+    const hasCommandMatch = options.some(option => option.dataset.command.startsWith(query));
+    options.forEach(option => {
+      const names = hasCommandMatch
+        ? [option.dataset.command]
+        : (option.dataset.aliases || '').split(',');
+      option.hidden = Boolean(query) && !names.some(name => normalizeQuery(name).startsWith(query));
+    });
+    selected = options.findIndex(option => !option.hidden);
+  }
 
   function highlight(index, scrollIntoView = true) {
-    selected = (index + options.length) % options.length;
+    const visible = matchingOptions();
+    if (!visible.length) {
+      selected = -1;
+      input.removeAttribute('aria-activedescendant');
+      return;
+    }
+    const option = options[index];
+    selected = option && !option.hidden ? index : options.indexOf(visible[0]);
     options.forEach((option, optionIndex) => {
       option.setAttribute('aria-selected', String(optionIndex === selected));
     });
@@ -57,9 +79,10 @@ function initializePortfolio(form) {
   }
 
   function setMenu(open) {
-    menu.hidden = !open;
-    input.setAttribute('aria-expanded', String(open));
-    if (open) highlight(selected);
+    const hasMatches = matchingOptions().length > 0;
+    menu.hidden = !open || !hasMatches;
+    input.setAttribute('aria-expanded', String(open && hasMatches));
+    if (open && hasMatches) highlight(selected);
     else input.removeAttribute('aria-activedescendant');
   }
 
@@ -287,7 +310,7 @@ function initializePortfolio(form) {
     previousResponses.clear();
     input.value = '';
     selected = 0;
-    explicitSuggestionSelection = false;
+    filterOptions();
     setMenu(true);
     input.focus();
     announcement.textContent = 'Conversation cleared.';
@@ -306,8 +329,8 @@ function initializePortfolio(form) {
     finishActiveGeneration();
     finishActiveTyping();
     input.value = '';
+    filterOptions();
     setMenu(false);
-    explicitSuggestionSelection = false;
     selected = 0;
 
     const previousEntry = previousResponses.get(resolution.key);
@@ -355,21 +378,22 @@ function initializePortfolio(form) {
   input.addEventListener('focus', () => setMenu(true));
   input.addEventListener('click', () => setMenu(true));
   input.addEventListener('input', () => {
-    explicitSuggestionSelection = false;
-    selected = 0;
+    filterOptions();
     setMenu(true);
   });
   input.addEventListener('keydown', event => {
     if (event.key === 'Escape') {
       setMenu(false);
-      explicitSuggestionSelection = false;
     }
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       const wasClosed = menu.hidden;
       setMenu(true);
-      highlight(wasClosed ? 0 : selected + (event.key === 'ArrowDown' ? 1 : -1));
-      explicitSuggestionSelection = true;
+      const visible = matchingOptions();
+      if (!visible.length) return;
+      const position = wasClosed ? -1 : visible.indexOf(options[selected]);
+      const nextPosition = (position + (event.key === 'ArrowDown' ? 1 : -1) + visible.length) % visible.length;
+      highlight(options.indexOf(visible[nextPosition]));
     }
   });
 
@@ -377,7 +401,6 @@ function initializePortfolio(form) {
     option.addEventListener('pointermove', event => {
       if (event.pointerType !== 'mouse') return;
       if (selected !== optionIndex) highlight(optionIndex, false);
-      explicitSuggestionSelection = true;
     });
     option.addEventListener('mousedown', event => event.preventDefault());
     option.addEventListener('click', () => send('/' + option.dataset.command));
@@ -391,7 +414,7 @@ function initializePortfolio(form) {
   form.addEventListener('submit', event => {
     event.preventDefault();
     const value = input.value.trim();
-    if (!menu.hidden && (!value || explicitSuggestionSelection)) {
+    if (!menu.hidden && selected >= 0) {
       send('/' + options[selected].dataset.command);
     } else if (value) {
       send(value);
