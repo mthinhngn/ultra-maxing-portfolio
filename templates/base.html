@@ -7,7 +7,7 @@
   <title>{% block title %}thinhdegoat{% endblock %}</title>
   <link id="site-favicon" rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon-light.svg') }}" data-light-icon="{{ url_for('static', filename='images/favicon-light.svg') }}" data-dark-icon="{{ url_for('static', filename='images/favicon-dark.svg') }}">
   <script src="{{ url_for('static', filename='js/theme.js', v='desktop-video-1') }}"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css', v='night-mode-3') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css', v='night-mode-4') }}">
   {% if request.endpoint == 'home' %}<link rel="stylesheet" href="{{ url_for('static', filename='css/terminal-home.css', v='mobile-theme-1') }}">{% endif %}
   {% if request.endpoint == 'resume' %}<link rel="stylesheet" href="{{ url_for('static', filename='css/resume.css') }}">{% endif %}
   <script src="{{ url_for('static', filename='js/terminal.js', v='prefix-search-1') }}" defer></script>

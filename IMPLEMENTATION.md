@@ -1,5 +1,26 @@
 # Implementation Report
 
+## 2026-09-23 — Make the Gmail link orange
+
+### What changed and why
+
+- Changed the shared Gmail color token to orange in both themes: `#FFB347` in dark mode and `#9A4C00` in light mode. The stronger light-theme shade keeps the link readable on the warm background.
+- Bumped the shared stylesheet URL version so browsers fetch the updated color.
+
+### Architecture and trade-offs
+
+Both the `/contact` page and the homepage terminal contact reply use the same `--contact-email` token. Keeping that semantic token preserves one source of truth, while separate shades maintain contrast against each theme's surface.
+
+### Verification performed
+
+- Confirmed both Gmail links use the shared `contact-email` class and CSS token.
+- Calculated WCAG contrast across the contact page and terminal surfaces: at least `9.89:1` in dark mode and `5.27:1` in light mode.
+- Flask test-client requests returned HTTP 200 for `/`, `/contact`, and the versioned stylesheet; the rendered templates and both orange tokens were present. `git diff --check` passed for the touched paths.
+
+### Git state
+
+The orange color token, stylesheet cache version, and this report entry are in a focused local commit. Existing unrelated changes were not included; no push or deployment was made.
+
 ## 2026-09-22 - Vercel deployment preparation
 
 ### What changed and why
