@@ -21,9 +21,7 @@ TERMINAL_COMMANDS = (
     {"command": "contact", "label": "Contact", "aliases": ("get in touch",), "description": "drop me a hello"},
     {"command": "clear", "label": "Clear conversation", "aliases": (), "description": "wipe the slate and start fresh"},
 )
-TERMINAL_COMMAND_OPTIONS = tuple(
-    command for command in TERMINAL_COMMANDS if command["command"] != "clear"
-)
+
 SKILL_GROUPS = (
     {"key": "languages", "label": "Languages", "skills": ("Python", "Java", "C++", "JavaScript/TypeScript", "HTML/CSS", "Bash", "Go (Golang)")},
     {"key": "frameworks", "label": "Frameworks", "skills": ("React", "FastAPI", "Node.js", "Next.js", "Express.js", "Flask", "JUnit")},
@@ -44,7 +42,7 @@ def create_app() -> Flask:
             projects=PROJECTS,
             experience=EXPERIENCE,
             terminal_commands=TERMINAL_COMMANDS,
-            terminal_command_options=TERMINAL_COMMAND_OPTIONS,
+            terminal_command_options=TERMINAL_COMMANDS,
             skill_groups=SKILL_GROUPS,
         )
 
