@@ -1,5 +1,6 @@
 /* Keep the homepage a viewport-sized workspace; the transcript owns scrolling. */
 body.home-page {
+  --mono: "Cascadia Mono", "Cascadia Code", "SFMono-Regular", Menlo, Consolas, monospace;
   --terminal-surface: #111a20;
   --terminal-titlebar: #1e2a33;
   --terminal-text: #e5ebee;
@@ -23,6 +24,7 @@ body.home-page {
   --terminal-scroll: #5b6a72;
   --terminal-scroll-track: #202a31;
   --terminal-shadow: 0 16px 60px rgb(0 0 0 / 0.48);
+  height: 100vh;
   height: 100dvh;
   min-height: 0;
   overflow: hidden;
@@ -79,6 +81,7 @@ body.home-page {
   place-items: center;
   width: 100%;
   max-width: none;
+  height: 100vh;
   height: 100dvh;
   margin: 0;
   padding: 0 clamp(12px, 5.5vw, 96px);
@@ -144,7 +147,8 @@ body.home-page {
   background: var(--terminal-surface);
   color: var(--terminal-text);
   box-shadow: var(--terminal-shadow);
-  font: 15px/1.55 var(--mono);
+  font: 500 15px/1.55 var(--mono);
+  transition: background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease, color 220ms ease;
 }
 
 .portfolio-terminal [hidden] { display: none !important; }
@@ -157,6 +161,7 @@ body.home-page {
   padding: 7px 12px 0;
   background: var(--terminal-titlebar);
   color: var(--terminal-text);
+  transition: background-color 220ms ease, color 220ms ease;
 }
 
 .terminal-content { display: flex; flex: 1; min-width: 0; min-height: 0; flex-direction: column; }
@@ -168,6 +173,7 @@ body.home-page {
   padding: 6px 18px;
   background: var(--terminal-surface);
   border-radius: 7px 7px 0 0;
+  transition: background-color 220ms ease;
 }
 
 .terminal-tab > span { color: var(--terminal-focus); }
@@ -181,12 +187,12 @@ body.home-page {
   border-radius: 0;
   background: transparent;
   color: var(--terminal-muted);
+  transition: color 220ms ease;
 }
 .home-page .theme-toggle:hover { color: var(--terminal-focus); }
 .home-page .theme-toggle:focus-visible { outline: 2px solid var(--terminal-focus); outline-offset: 2px; }
 .home-page .theme-toggle svg { top: 3px; right: auto; left: 3px; width: 24px; height: 24px; }
 .home-page .theme-knob { display: none; }
-.home-page .theme-animation { top: -3px; left: -3px; width: 36px; height: 36px; }
 .home-page .theme-toggle svg { transition: opacity 180ms ease, transform 180ms ease; }
 :root[data-theme="dark"] .home-page .theme-day { transform: rotate(-45deg) scale(0.7); }
 :root[data-theme="light"] .home-page .theme-night { transform: rotate(45deg) scale(0.7); }
@@ -360,11 +366,11 @@ body.home-page {
 .session-introduction p + p { color: var(--terminal-muted); }
 .home-page #terminal-log { margin: 0; font: inherit; }
 
-.conversation-entry { margin: 26px 0; overflow-wrap: anywhere; }
+.conversation-entry { margin: 16px 0; overflow-wrap: anywhere; }
 .conversation-command { margin: 0 0 8px; padding: 6px 12px; border-left: 2px solid var(--terminal-visitor); background: var(--terminal-command-surface); }
 .conversation-prefix { color: var(--terminal-muted); }
 .conversation-question { color: var(--terminal-text); }
-.conversation-reply { display: grid; grid-template-columns: 12px minmax(0, 1fr); gap: 6px; margin-left: 0; }
+.conversation-reply { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 4px; margin-left: 0; }
 .conversation-reply-generating { grid-template-columns: 18px minmax(0, 1fr); align-items: center; min-height: 18px; }
 .generating-icon { display: grid; grid-template-columns: repeat(4, 3px); grid-auto-rows: 3px; gap: 2px; width: 18px; height: 18px; align-content: center; }
 .generating-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--terminal-focus); opacity: 0.24; animation: generating-dot-pulse 840ms ease-in-out infinite; animation-delay: calc(var(--dot-index) * 24ms); }
@@ -403,7 +409,7 @@ body.home-page {
   from { opacity: 0; transform: translateY(0.35em); filter: blur(8px); }
   to { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
-.conversation-reply-content article + article { margin-top: 24px; }
+.conversation-reply-content article + article { margin-top: 12px; }
 .conversation-reply-content h3 { margin: 0 0 4px; color: var(--terminal-reply); font: bold 16px/1.5 var(--mono); }
 .conversation-reply-content h3.contact-heading,
 .conversation-reply-content article:has(.contact-email) > h3 { color: var(--terminal-reply); }
@@ -421,10 +427,25 @@ body.home-page {
 .conversation-reply-content article[data-project-title="Porta"] h3 { color: var(--terminal-project-porta); }
 .conversation-reply-content article[data-project-title="PreParty Live"] h3 { color: var(--terminal-project-preparty); }
 .conversation-reply-content article[data-project-title="Adversarial Text Generator"] h3 { color: var(--terminal-project-adversarial); }
+.conversation-reply-content article[data-project-title="Porta"] { --stack-accent: var(--terminal-project-porta); }
+.conversation-reply-content article[data-project-title="PreParty Live"] { --stack-accent: var(--terminal-project-preparty); }
+.conversation-reply-content article[data-project-title="Adversarial Text Generator"] { --stack-accent: var(--terminal-project-adversarial); }
+.conversation-reply-content .reply-meta.project-stack { margin: 8px 0 0; color: var(--stack-accent); font: 600 13px/1.7 var(--mono); }
+.conversation-reply-content .project-stack-item { display: inline-block; margin-right: 0.55em; white-space: nowrap; }
+.conversation-reply-content .project-stack-branch { margin-right: 0.55em; color: var(--stack-accent); font-weight: 700; }
+.conversation-reply-content .project-stack-separator { margin-right: 0.55em; color: var(--terminal-muted); font-weight: 400; }
 .conversation-reply-content article[data-project-title] > p:not(.reply-meta)::before { content: "— "; color: var(--terminal-muted); }
 .conversation-reply-content article[data-project-title] > p:not(.reply-meta):not(.has-generated-content)::before { content: none; }
 .conversation-reply-content p { margin: 4px 0; }
 .conversation-reply-content .reply-meta { color: var(--terminal-muted); }
+.conversation-reply-content .reply-experience .experience-heading-line { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.85em; row-gap: 0; }
+.conversation-reply-content .reply-experience .experience-organization { margin-bottom: 0; color: var(--terminal-reply); }
+.conversation-reply-content .reply-experience .experience-role { margin: 0; color: var(--terminal-text); font: 500 0.94em/1.5 var(--mono); }
+.conversation-reply-content .reply-experience .experience-dates { margin: 0; color: var(--terminal-reply); font: 0.82em/1.5 var(--mono); white-space: nowrap; }
+.conversation-reply-content .reply-experience .experience-description { max-width: 82ch; margin: 6px 0 0; color: var(--terminal-text); font-size: inherit; line-height: 1.5; }
+.conversation-reply-content .reply-experience .experience-description-marker { color: var(--terminal-reply); }
+.conversation-reply-content .resume-bullets { max-width: none; gap: 3px; margin: 6px 0 0; padding-left: 1.25em; color: var(--terminal-muted); font-size: inherit; line-height: 1.4; }
+.conversation-reply-content .resume-bullets li::marker { color: var(--terminal-reply); }
 .conversation-reply-content a { color: var(--terminal-focus); text-decoration: underline; text-underline-offset: 4px; }
 .conversation-reply-content .contact-email { color: var(--contact-email); }
 .reply-links .contact-link-github { color: var(--contact-github); }
@@ -465,7 +486,8 @@ body.home-page {
 .terminal-status > span:not(#command-hint) { display: none; }
 
 @media (max-width: 600px) {
-  .home-page #main-content { padding: 12px 10px 54px; }
+  .home-page #main-content { padding: 12px 10px; }
+  .portfolio-session { padding-inline: 16px; }
   .welcome-screen { padding: 24px clamp(18px, 5vw, 28px); }
   .portfolio-terminal { width: 100%; height: 100%; border-radius: 7px; font-size: 13px; }
   .terminal-maximize-control { width: 28px; height: 28px; flex-basis: 28px; }

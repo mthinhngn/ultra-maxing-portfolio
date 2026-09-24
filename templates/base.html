@@ -6,11 +6,11 @@
   <meta name="description" content="Thinh Nguyen, Computer Engineering at SJSU. Building reliable infrastructure, distributed systems, and applied AI.">
   <title>{% block title %}thinhdegoat{% endblock %}</title>
   <link id="site-favicon" rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon-light.svg') }}" data-light-icon="{{ url_for('static', filename='images/favicon-light.svg') }}" data-dark-icon="{{ url_for('static', filename='images/favicon-dark.svg') }}">
-  <script src="{{ url_for('static', filename='js/theme.js', v='desktop-video-1') }}"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css', v='night-mode-4') }}">
-  {% if request.endpoint == 'home' %}<link rel="stylesheet" href="{{ url_for('static', filename='css/terminal-home.css', v='mobile-theme-1') }}">{% endif %}
+  <script src="{{ url_for('static', filename='js/theme.js', v='safari-theme-1') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css', v='project-stack-4-experience-hierarchy-3') }}">
+  {% if request.endpoint == 'home' %}<link rel="stylesheet" href="{{ url_for('static', filename='css/terminal-home.css', v='project-stack-4-experience-hierarchy-3') }}">{% endif %}
   {% if request.endpoint == 'resume' %}<link rel="stylesheet" href="{{ url_for('static', filename='css/resume.css') }}">{% endif %}
-  <script src="{{ url_for('static', filename='js/terminal.js', v='prefix-search-1') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/terminal.js', v='experience-command-1') }}" defer></script>
   <script src="{{ url_for('static', filename='js/scroll-motion.js') }}" defer></script>
   <script type="module" src="{{ url_for('static', filename='js/scene.js') }}"></script>
 </head>
@@ -36,7 +36,7 @@
     </a>
     <nav class="site-nav" aria-label="Portfolio pages">
       <a href="{{ url_for('projects') }}" {% if request.endpoint == 'projects' %}aria-current="page"{% endif %}>/projects</a>
-      <a href="{{ url_for('experience') }}" {% if request.endpoint == 'experience' %}aria-current="page"{% endif %}>/experience</a>
+      <a href="{{ url_for('experience') }}" {% if request.endpoint in ('experience', 'experiences') %}aria-current="page"{% endif %}>/experience</a>
       <a href="{{ url_for('about') }}" {% if request.endpoint == 'about' %}aria-current="page"{% endif %}>/about</a>
       <a href="{{ url_for('contact') }}" {% if request.endpoint == 'contact' %}aria-current="page"{% endif %}>/contact</a>
     </nav>

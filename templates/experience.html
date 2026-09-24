@@ -11,14 +11,14 @@
     </header>
 
     <div class="experience-list">
-      {% for job in experience %}
+      {% for position in experience %}
         <article class="experience-row">
-          <p class="experience-date">{{ job.date }}</p>
-          <div>
-            <h2>{{ job.organization }}</h2>
-            <p class="job-role">{{ job.role }}</p>
-            <p>{{ job.description }}</p>
+          <div class="experience-heading-line">
+            <h2 class="experience-organization">{{ position.organization }}</h2>
+            <p class="experience-dates"><span class="experience-date-separator" aria-hidden="true">·</span><span>{{ position.dates }}</span></p>
           </div>
+          <p class="experience-role">{{ position.role }}</p>
+          {% if position.description %}<p class="experience-description"><span class="experience-description-marker" aria-hidden="true">-</span><span>{{ position.description }}</span></p>{% endif %}
         </article>
       {% endfor %}
     </div>

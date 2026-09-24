@@ -2,19 +2,66 @@ from flask import Flask, redirect, render_template, url_for
 
 
 PROJECTS = (
-    {"title": "Porta", "category": "LLM INFRASTRUCTURE", "summary": "An LLM gateway that keeps AI applications running when a provider fails.", "detail": "Built automatic OpenAI-to-Ollama fallback routing and caching, sustaining 93% success during primary-provider failure. Added dashboards for token usage and fallback rates.", "technologies": "FastAPI / Ollama / Redis / Kubernetes / Prometheus"},
-    {"title": "PreParty Live", "category": "REAL-TIME SYSTEMS", "summary": "A pre-event engagement app with live chat and interactive activities.", "detail": "Connected SwiftUI clients to a Go backend over WebSockets. Deployed on AWS ECS with PostgreSQL RDS, S3, and CloudFront for storage and media delivery.", "technologies": "SwiftUI / Go / WebSockets / PostgreSQL / AWS"},
-    {"title": "Adversarial Text Generator", "category": "APPLIED MACHINE LEARNING", "summary": "A fine-tuning pipeline for testing the limits of text classifiers.", "detail": "Fine-tuned Llama 3.2 1B with QLoRA on HateXplain. Built a six-metric evaluation suite covering toxicity, diversity, fluency, attack success, control accuracy, and LLM-as-judge.", "technologies": "Python / PyTorch / Hugging Face / PEFT / QLoRA"},
+    {
+        "title": "Porta",
+        "category": "LLM INFRASTRUCTURE",
+        "technologies": ("FastAPI", "OpenAI", "Ollama", "Redis", "Docker", "Kubernetes", "Helm", "Prometheus", "Grafana"),
+        "bullets": (
+            "Built an LLM gateway with automatic failover and caching to keep AI apps running across providers and cut costs",
+            "Designed OpenAI to Ollama fallback routing across Llama and Qwen, sustaining 93% success on primary failure",
+            "Implemented Prometheus metrics and Grafana dashboards for token usage and fallback request rates",
+        ),
+    },
+    {
+        "title": "PreParty Live",
+        "category": "REAL-TIME SYSTEMS",
+        "technologies": ("SwiftUI", "Go", "WebSockets", "PostgreSQL", "AWS RDS", "S3", "CloudFront"),
+        "bullets": (
+            "Developed a real-time pre-event engagement app with SwiftUI and Go, enabling live chat and interactive activities",
+            "Implemented WebSockets for low-latency, bidirectional messaging between SwiftUI clients and the Go backend",
+            "Deployed on AWS ECS with PostgreSQL RDS, S3, and CloudFront for scalable storage and media delivery",
+        ),
+    },
+    {
+        "title": "Adversarial Text Generator",
+        "category": "APPLIED MACHINE LEARNING",
+        "technologies": ("Python", "Hugging Face", "PyTorch", "PEFT", "QLoRA", "TRL"),
+        "bullets": (
+            "Fine-tuned Llama 3.2 1B with QLoRA on HateXplain, generating adversarial text for classifier training",
+            "Built a six-metric suite evaluating toxicity, diversity, fluency, attack success, control accuracy, and LLM-as-judge",
+            "Developed a Hugging Face and PyTorch pipeline for Colab training, ablation studies, and decoding analysis",
+        ),
+    },
 )
 EXPERIENCE = (
-    {"organization": "SJSU Computer Science Systems Group", "role": "Undergraduate Research Assistant", "date": "AUG 2026 - PRESENT", "description": "Researching secure data exchange, replay protection, and data freshness in distributed Android systems with 10+ researchers."},
-    {"organization": "Software & Computer Engineering Society", "role": "Development Team Officer", "date": "JAN 2025 - PRESENT", "description": "Built GitOps deployment pipelines and Prometheus monitoring for 15+ services and 3,000+ users; cut deployment time by 80%."},
-    {"organization": "SJSU College of Engineering", "role": "Software Engineering Intern", "date": "MAY 2026 - AUG 2026", "description": "Built an Express.js API for YouTube playback on Raspberry Pi speakers, with retries and Docker, Prometheus, and Grafana monitoring."},
-    {"organization": "Spartan Racing", "role": "Software Engineering Intern", "date": "AUG 2025 - MAY 2026", "description": "Built pytest simulations for VCU algorithms, automated with GitHub Actions; added hardware-in-the-loop checks for ECU timing and CAN bus."},
+    {
+        "role": "Undergraduate Research Assistant",
+        "organization": "SJSU Computer Science Systems Group",
+        "dates": "AUG 2026 - PRESENT",
+        "description": "Collaborating on the open-source Disconnected Data Distribution (discd.net) project, which provides internet services to disconnected areas through mobile Android infrastructure.",
+    },
+    {
+        "role": "Development Team Officer",
+        "organization": "Software & Computer Engineering Society",
+        "dates": "JAN 2025 - PRESENT",
+        "description": "Built GitOps deployment pipelines and Prometheus monitoring for 15+ services and 3,000+ users; cut deployment time by 80%.",
+    },
+    {
+        "role": "Software Engineering Intern",
+        "organization": "SJSU College of Engineering",
+        "dates": "MAY 2026 - AUG 2026",
+        "description": "Built an Express.js API for YouTube playback on Raspberry Pi speakers, with retries and Docker, Prometheus, and Grafana monitoring.",
+    },
+    {
+        "role": "Software Engineering Intern",
+        "organization": "Spartan Racing",
+        "dates": "AUG 2025 - MAY 2026",
+        "description": "Built a software-in-the-loop (SIL) testing framework using PyTest and mock I/O drivers to automatically validate Vehicle Control Unit (VCU) software algorithms.",
+    },
 )
 TERMINAL_COMMANDS = (
     {"command": "help", "label": "Command index", "aliases": ("commands",), "description": "peek at the command lineup"},
-    {"command": "experience", "label": "Experience", "aliases": ("work experience",), "description": "where I put my skills to work"},
+    {"command": "experiences", "label": "Experience", "aliases": ("experience", "work experience"), "description": "where I put my skills to work"},
     {"command": "projects", "label": "Projects", "aliases": ("project", "selected projects", "my projects"), "description": "take a look at things I've built"},
     {"command": "skills", "label": "Skills", "aliases": ("toolkit",), "description": "the tech in my toolbox"},
     {"command": "whoami", "label": "Who am I", "aliases": ("about me",), "description": "meet the human behind the keyboard"},
@@ -54,6 +101,7 @@ def create_app() -> Flask:
     def project_alias() -> str:
         return redirect(url_for("projects"))
 
+    @app.get("/experiences", endpoint="experiences")
     @app.get("/experience")
     def experience() -> str:
         return render_template("experience.html", experience=EXPERIENCE)

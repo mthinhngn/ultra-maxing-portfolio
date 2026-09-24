@@ -55,8 +55,20 @@
   <span id="terminal-resize-hint" class="sr-only">Point to a terminal edge or corner and drag to resize. Or focus the resize control and use the arrow keys; press Home or Enter to restore its default size.</span>
   <noscript><p>Enable JavaScript for the terminal, or visit <a href="{{ url_for('projects') }}">projects</a>, <a href="{{ url_for('experience') }}">experience</a>, <a href="{{ url_for('about') }}">about</a>, or <a href="{{ url_for('contact') }}">contact</a>.</p></noscript>
 </section>
-<template id="reply-experience">{% for item in experience %}<article><h3>{{ item.role }}</h3><p class="reply-meta">{{ item.organization }} · {{ item.date }}</p><p>{{ item.description }}</p></article>{% endfor %}</template>
-<template id="reply-projects">{% for item in projects %}<article data-project-title="{{ item.title }}"><h3>{{ item.title }}</h3><p>{{ item.summary }}</p><p>{{ item.detail }}</p><p class="reply-meta">{{ item.technologies }}</p></article>{% endfor %}</template>
+<template id="reply-experiences">{% for position in experience %}<article class="reply-experience"><div class="experience-heading-line"><h3 class="experience-organization">{{ position.organization }}</h3><p class="reply-meta experience-dates"><span class="experience-date-separator" aria-hidden="true">·</span><span>{{ position.dates }}</span></p></div><p class="experience-role">{{ position.role }}</p>{% if position.description %}<p class="experience-description"><span class="experience-description-marker" aria-hidden="true">-</span><span>{{ position.description }}</span></p>{% endif %}</article>{% endfor %}</template>
+<template id="reply-projects">
+  {% for item in projects %}
+  <article data-project-title="{{ item.title }}">
+    <h3>{{ item.title }}</h3>
+    <ul class="resume-bullets">{% for bullet in item.bullets %}<li>{{ bullet }}</li>{% endfor %}</ul>
+    <p class="reply-meta project-stack">
+      {% for technology in item.technologies %}
+      <span class="project-stack-item">{% if loop.first %}<span class="project-stack-branch" aria-hidden="true">└─</span>{% else %}<span class="project-stack-separator" aria-hidden="true">›</span>{% endif %} {{ technology }}</span>
+      {% endfor %}
+    </p>
+  </article>
+  {% endfor %}
+</template>
 <template id="reply-whoami"><article><h3>Who am I</h3><p>I'm Thinh Nguyen. Computer Engineering at San José State University.</p><p>My work spans backend services, deployment infrastructure, distributed Android systems, and vehicle software testing.</p><p>B.S. Computer Engineering · Expected December 2027</p></article></template>
 <template id="reply-contact"><article><h3 class="contact-heading">Get in touch</h3><p><a class="contact-email" href="mailto:mthinhngn@gmail.com">mthinhngn@gmail.com</a></p><p class="reply-links"><a class="contact-link contact-link-github" href="https://github.com/mthinhngn" target="_blank" rel="noreferrer">GitHub ↗</a><a class="contact-link contact-link-linkedin" href="https://linkedin.com/in/mthinhngn" target="_blank" rel="noreferrer">LinkedIn ↗</a><a class="contact-link contact-link-resume" href="{{ url_for('resume') }}">View resume ↗</a></p></article></template>
 <template id="reply-help">

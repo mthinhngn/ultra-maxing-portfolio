@@ -4,7 +4,7 @@ if (portfolioPrompt) initializePortfolio(portfolioPrompt);
 const portfolioTerminal = document.querySelector('.portfolio-terminal');
 if (portfolioTerminal) initializeTerminalResize(portfolioTerminal);
 
-const UNKNOWN_REPLY = 'I couldn’t match that request. Try /help, /projects, /skills, /experience, /whoami, or /contact.';
+const UNKNOWN_REPLY = 'I couldn’t match that request. Try /help, /projects, /skills, /experiences, /whoami, or /contact.';
 const WORD_REVEAL_TRANSITION_MS = 380;
 const GENERATION_STATUS_MS = 680;
 

@@ -14,6 +14,9 @@
   --contact-github: #b69be8;
   --contact-linkedin: #8bc99e;
   --contact-resume: #e7879c;
+  --project-porta: #e3a665;
+  --project-preparty: #e7879c;
+  --project-adversarial: #b69be8;
   --mono: Consolas, "Liberation Mono", "Courier New", monospace;
   --sans: "Segoe UI", Arial, sans-serif;
 }
@@ -44,6 +47,7 @@ body {
   font-family: var(--sans);
   font-size: 18px;
   line-height: 1.65;
+  transition: background-color 220ms ease, color 220ms ease;
 }
 
 .terminal-scene {
@@ -178,11 +182,11 @@ body {
   background: var(--bg);
   color: var(--text);
   cursor: pointer;
+  transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease;
 }
 
 .theme-toggle[hidden] { display: none; }
-.theme-animation[hidden] { display: none; }
-.theme-toggle svg { position: absolute; top: 4px; width: 14px; height: 14px; }
+.theme-toggle svg { position: absolute; top: 4px; width: 14px; height: 14px; transition: opacity 220ms ease, transform 220ms ease; }
 .theme-day { left: 4px; opacity: 0; }
 .theme-night { right: 4px; }
 .theme-knob {
@@ -193,20 +197,8 @@ body {
   height: 16px;
   border-radius: 50%;
   background: var(--text);
-  transition: transform 180ms ease;
+  transition: transform 220ms ease, background-color 220ms ease;
 }
-.theme-animation {
-  position: absolute;
-  z-index: 1;
-  top: -5px;
-  left: 4px;
-  width: 36px;
-  height: 32px;
-  pointer-events: none;
-}
-:root[data-theme="dark"] .theme-animation { filter: invert(1); }
-.theme-toggle.is-animating > svg,
-.theme-toggle.is-animating .theme-knob { opacity: 0; }
 
 :root[data-theme="light"] {
   color-scheme: light;
@@ -224,6 +216,9 @@ body {
   --contact-github: #665f80;
   --contact-linkedin: #41694f;
   --contact-resume: #895564;
+  --project-porta: #81643f;
+  --project-preparty: #8b5968;
+  --project-adversarial: #665f80;
 }
 
 [data-theme="light"] .theme-knob { transform: translateX(22px); }
@@ -469,8 +464,7 @@ summary:focus-visible {
 
 .panel-label,
 .group-label,
-.project-category,
-.experience-date {
+.project-category {
   margin: 0;
   color: var(--accent);
   font-family: var(--mono);
@@ -549,7 +543,6 @@ summary:focus-visible {
 
 .accent,
 .prompt-mark,
-.job-role,
 .text-link {
   color: var(--accent);
 }
@@ -687,6 +680,7 @@ summary:focus-visible {
 }
 
 .project {
+  --stack-accent: var(--accent);
   grid-template-columns: 58px minmax(0, 1fr);
   gap: 24px;
 }
@@ -704,14 +698,20 @@ summary:focus-visible {
   margin: 7px 0 10px;
   font-family: var(--mono);
   font-size: clamp(20px, 1.7vw, 24px);
-  font-weight: 400;
+  font-weight: 700;
+  letter-spacing: -0.025em;
   line-height: 1.3;
 }
 
-.project-summary {
-  max-width: none;
-  margin: 0 0 12px;
+.project h2 {
+  margin-top: 4px;
+  font-size: clamp(25px, 2.1vw, 31px);
+  line-height: 1.16;
 }
+
+.project[data-project-title="Porta"] h2 { color: var(--project-porta); }
+.project[data-project-title="PreParty Live"] h2 { color: var(--project-preparty); }
+.project[data-project-title="Adversarial Text Generator"] h2 { color: var(--project-adversarial); }
 
 .project:hover,
 .experience-row:hover {
@@ -720,48 +720,22 @@ summary:focus-visible {
 }
 
 .project:hover .project-number,
-.experience-row:hover .experience-date {
-  color: var(--accent);
-}
-
-.project details {
-  max-width: 82ch;
-  color: var(--muted);
-  font-size: 16px;
-}
-
-.project summary {
-  width: fit-content;
-  padding: 8px 0;
-  color: var(--text);
-  cursor: pointer;
-  font-family: var(--mono);
-  list-style: none;
-  text-decoration: underline;
-  text-underline-offset: 5px;
-}
-
-.project summary::-webkit-details-marker {
-  display: none;
-}
-
-.project summary span {
-  display: inline-block;
-  margin-left: 10px;
-  color: var(--accent);
-  transition: transform 160ms ease;
-}
-
-.project details[open] summary span {
-  transform: rotate(45deg);
-}
-
-.technologies {
-  margin: 17px 0 0;
-  color: var(--muted);
-  font-family: var(--mono);
+.project-stack {
+  margin: 20px 0 0;
+  color: var(--stack-accent);
+  font-family: "Cascadia Mono", "Cascadia Code", Consolas, monospace;
   font-size: 14px;
+  font-weight: 600;
+  line-height: 1.8;
 }
+
+.project[data-project-title="Porta"] { --stack-accent: var(--project-porta); }
+.project[data-project-title="PreParty Live"] { --stack-accent: var(--project-preparty); }
+.project[data-project-title="Adversarial Text Generator"] { --stack-accent: var(--project-adversarial); }
+
+.project-stack-item { display: inline-block; margin-right: 0.6em; white-space: nowrap; }
+.project-stack-branch { margin-right: 0.55em; color: var(--stack-accent); font-weight: 700; }
+.project-stack-separator { margin-right: 0.55em; color: var(--muted); font-weight: 400; }
 
 .text-link {
   display: inline-block;
@@ -770,31 +744,75 @@ summary:focus-visible {
 }
 
 .experience-row {
-  grid-template-columns: 250px minmax(0, 1fr);
-  gap: 42px;
+  display: block;
 }
 
-.experience-date {
-  padding-top: 9px;
-  color: var(--muted);
+.experience-heading-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.85em;
+  row-gap: 0;
 }
 
-.experience-row h2 {
-  margin-top: 0;
-  font-size: 21px;
-}
-
-.experience-row > div > p:last-child {
-  max-width: 82ch;
-  margin-bottom: 0;
-  color: var(--muted);
-  font-size: 16px;
-}
-
-.job-role {
+.experience-row .experience-organization {
   margin: 0;
+  color: var(--accent);
+  font-size: clamp(20px, 1.7vw, 24px);
+}
+
+.experience-role {
+  margin: 4px 0 0;
+  color: var(--text);
   font-family: var(--mono);
   font-size: 16px;
+  line-height: 1.5;
+}
+
+.experience-dates {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6em;
+  margin: 0;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.project-bullets,
+.resume-bullets {
+  display: grid;
+  gap: 7px;
+  max-width: 82ch;
+  margin: 12px 0 0;
+  padding-left: 1.25em;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.project-bullets li::marker,
+.resume-bullets li::marker {
+  content: "-  ";
+  color: var(--accent);
+}
+
+.experience-description {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.55em;
+  max-width: 82ch;
+  margin: 16px 0 0;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.experience-description-marker {
+  color: var(--accent);
+  font-weight: 700;
 }
 
 .about-grid {
@@ -961,8 +979,7 @@ summary:focus-visible {
 
 @media (min-width: 1101px) {
   .page-heading h1,
-  .page-heading > p:last-child,
-  .project-summary {
+  .page-heading > p:last-child {
     white-space: nowrap;
   }
 }
@@ -1056,9 +1073,9 @@ summary:focus-visible {
   }
 
   .site-nav {
-    gap: 21px;
+    gap: 10px;
     padding: 3px 0;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .terminal-home {
@@ -1147,13 +1164,8 @@ summary:focus-visible {
     gap: 12px;
   }
 
-  .experience-row,
   .about-grid {
     grid-template-columns: 1fr;
-  }
-
-  .experience-row {
-    gap: 6px;
   }
 
   .about-grid {
@@ -1166,6 +1178,13 @@ summary:focus-visible {
     align-items: flex-start;
     flex-direction: column;
     gap: 6px;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-nav {
+    gap: 6px;
+    font-size: 12px;
   }
 }
 

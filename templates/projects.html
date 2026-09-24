@@ -12,17 +12,19 @@
 
     <div class="project-list">
       {% for project in projects %}
-        <article class="project">
+        <article class="project" data-project-title="{{ project.title }}">
           <div class="project-number">0{{ loop.index }}</div>
           <div>
             <p class="project-category">{{ project.category }}</p>
             <h2>{{ project.title }}</h2>
-            <p class="project-summary">{{ project.summary }}</p>
-            <details>
-              <summary>Read project notes <span aria-hidden="true">+</span></summary>
-              <p>{{ project.detail }}</p>
-            </details>
-            <p class="technologies">{{ project.technologies }}</p>
+            <ul class="project-bullets">
+              {% for bullet in project.bullets %}<li>{{ bullet }}</li>{% endfor %}
+            </ul>
+            <p class="technologies project-stack">
+              {% for technology in project.technologies %}
+                <span class="project-stack-item">{% if loop.first %}<span class="project-stack-branch" aria-hidden="true">└─</span>{% else %}<span class="project-stack-separator" aria-hidden="true">›</span>{% endif %} {{ technology }}</span>
+              {% endfor %}
+            </p>
           </div>
         </article>
       {% endfor %}

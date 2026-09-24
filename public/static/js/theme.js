@@ -16,26 +16,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     const button = document.querySelector('#theme-toggle');
     if (!button) return;
-    const animation = button.querySelector('.theme-animation');
-    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-    const compactScreen = matchMedia('(max-width: 600px)');
-    const stopAnimation = () => {
-      if (!animation) return;
-      animation.pause();
-      animation.hidden = true;
-      button.classList.remove('is-animating');
-    };
-    const playAnimation = (theme) => {
-      if (!animation || compactScreen.matches) return;
-      stopAnimation();
-      animation.src = theme === 'dark' ? animation.dataset.toNight : animation.dataset.toDay;
-      animation.playbackRate = reducedMotion.matches ? 2 : 1;
-      animation.hidden = false;
-      button.classList.add('is-animating');
-      animation.play().catch(stopAnimation);
-    };
-    animation?.addEventListener('ended', stopAnimation);
-    animation?.addEventListener('error', stopAnimation);
     const updateControl = () => {
       const light = root.dataset.theme === 'light';
       button.setAttribute('aria-checked', String(light));
@@ -52,7 +32,6 @@
         // Theme switching still works when browser storage is unavailable.
       }
       updateControl();
-      playAnimation(root.dataset.theme);
     });
   });
 })();
