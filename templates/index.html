@@ -5,20 +5,21 @@
 <section class="portfolio-terminal" aria-label="Thinh Nguyen portfolio terminal">
   <div class="terminal-content">
     <header class="window-bar">
-        <span class="terminal-tab"><span aria-hidden="true">❯_</span> thinh@portfolio</span>
+      <span class="terminal-tab"><span aria-hidden="true">❯_</span> thinh@portfolio</span>
       <div class="window-title-actions">
-        <span class="window-caption">portfolio session</span>
+        {% include 'partials/theme-toggle.html' %}
         <button id="terminal-maximize" class="terminal-maximize-control" type="button" aria-label="Maximize terminal" aria-pressed="false" title="Maximize terminal">
-          <svg data-maximize-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M3 15v4a2 2 0 0 0 2 2h4M21 15v4a2 2 0 0 1-2 2h-4"/></svg>
-          <svg data-restore-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" hidden><path d="M9 3v4a2 2 0 0 1-2 2H3M21 9h-4a2 2 0 0 1-2-2V3M3 15h4a2 2 0 0 1 2 2v4M15 21v-4a2 2 0 0 1 2-2h4"/></svg>
+          <svg data-maximize-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H5a1 1 0 0 0-1 1v4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4"/></svg>
+          <svg data-restore-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
         </button>
       </div>
     </header>
     <div id="welcome-screen" class="welcome-screen">
-      <p class="welcome-label">WELCOME</p>
-      <h1><span class="sr-only">Thinh Nguyen</span><img src="{{ url_for('static', filename='images/name.svg') }}" alt="" width="432" height="213"></h1>
-      <p>Portfolio session ready.</p>
-      <button id="continue-button" type="button">Press <strong>Enter</strong> to continue <span aria-hidden="true">↵</span></button>
+      <h1><span class="sr-only">Welcome</span><img src="{{ url_for('static', filename='images/welcome.svg') }}" alt="" width="507" height="214"></h1>
+      <div class="welcome-actions">
+        <p>Portfolio session ready<span class="welcome-cursor" aria-hidden="true">_</span></p>
+        <button id="continue-button" type="button">Press <strong>Enter</strong> to continue <span aria-hidden="true">↵</span></button>
+      </div>
     </div>
     <div id="portfolio-session" class="portfolio-session" hidden>
       <div id="session-output" class="session-output" tabindex="0" aria-label="Portfolio conversation">
@@ -28,8 +29,8 @@
       </div>
       <div class="command-dock">
         <div id="command-options" role="listbox" aria-label="Portfolio topics" hidden>
-          {% for command, label in [('experience', 'Experience'), ('projects', 'Projects'), ('about', 'About me'), ('contact', 'Contact')] %}
-          <div id="option-{{ command }}" role="option" aria-selected="false" data-command="{{ command }}"><span>/{{ command }}</span><span>{{ label }}</span></div>
+          {% for item in terminal_command_options %}
+          <div id="option-{{ item.command }}" role="option" aria-selected="false" data-command="{{ item.command }}" data-label="{{ item.label }}" data-aliases="{{ item.aliases | join(',') }}"><span>/{{ item.command }}</span><span>{{ item.description }}</span></div>
           {% endfor %}
         </div>
         <form id="portfolio-prompt" autocomplete="off">
@@ -56,7 +57,28 @@
 </section>
 <template id="reply-experience">{% for item in experience %}<article><h3>{{ item.role }}</h3><p class="reply-meta">{{ item.organization }} · {{ item.date }}</p><p>{{ item.description }}</p></article>{% endfor %}</template>
 <template id="reply-projects">{% for item in projects %}<article data-project-title="{{ item.title }}"><h3>{{ item.title }}</h3><p>{{ item.summary }}</p><p>{{ item.detail }}</p><p class="reply-meta">{{ item.technologies }}</p></article>{% endfor %}</template>
-<template id="reply-about"><article><h3>About me</h3><p>I'm Thinh Nguyen. Computer Engineering at San José State University.</p><p>My work spans backend services, deployment infrastructure, distributed Android systems, and vehicle software testing.</p><p>B.S. Computer Engineering · Expected December 2027</p></article></template>
-<template id="reply-contact"><article><h3>Get in touch</h3><p><a class="contact-email" href="mailto:mthinhngn@gmail.com">mthinhngn@gmail.com</a></p><p class="reply-links"><a class="contact-link contact-link-github" href="https://github.com/mthinhngn" target="_blank" rel="noreferrer">GitHub ↗</a><a class="contact-link contact-link-linkedin" href="https://linkedin.com/in/mthinhngn" target="_blank" rel="noreferrer">LinkedIn ↗</a><a class="contact-link contact-link-resume" href="{{ url_for('resume') }}">View resume ↗</a></p></article></template>
+<template id="reply-whoami"><article><h3>Who am I</h3><p>I'm Thinh Nguyen. Computer Engineering at San José State University.</p><p>My work spans backend services, deployment infrastructure, distributed Android systems, and vehicle software testing.</p><p>B.S. Computer Engineering · Expected December 2027</p></article></template>
+<template id="reply-contact"><article><h3 class="contact-heading">Get in touch</h3><p><a class="contact-email" href="mailto:mthinhngn@gmail.com">mthinhngn@gmail.com</a></p><p class="reply-links"><a class="contact-link contact-link-github" href="https://github.com/mthinhngn" target="_blank" rel="noreferrer">GitHub ↗</a><a class="contact-link contact-link-linkedin" href="https://linkedin.com/in/mthinhngn" target="_blank" rel="noreferrer">LinkedIn ↗</a><a class="contact-link contact-link-resume" href="{{ url_for('resume') }}">View resume ↗</a></p></article></template>
+<template id="reply-help">
+  <article class="command-index">
+    <h3>Available commands</h3>
+    {% for item in terminal_commands %}
+    <p class="command-row"><code>/{{ item.command }}</code><span class="command-separator" aria-hidden="true">—</span><span>{{ item.description }}</span></p>
+    {% endfor %}
+  </article>
+</template>
+<template id="reply-skills">
+  <article class="skills-index">
+    <h3>Technical skills</h3>
+    <div class="skills-groups">
+      {% for group in skill_groups %}
+      <section class="skills-group skills-group-{{ group.key }}">
+        <h4>{{ group.label }}</h4>
+        <p>{{ group.skills | join(', ') }}</p>
+      </section>
+      {% endfor %}
+    </div>
+  </article>
+</template>
 {% endblock %}
 {% block footer %}{% endblock %}

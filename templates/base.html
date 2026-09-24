@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Thinh Nguyen, Computer Engineering at SJSU. Building reliable infrastructure, distributed systems, and applied AI.">
   <title>{% block title %}thinhdegoat{% endblock %}</title>
   <link id="site-favicon" rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon-light.svg') }}" data-light-icon="{{ url_for('static', filename='images/favicon-light.svg') }}" data-dark-icon="{{ url_for('static', filename='images/favicon-dark.svg') }}">
-  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-  {% if request.endpoint == 'home' %}<link rel="stylesheet" href="{{ url_for('static', filename='css/terminal-home.css') }}">{% endif %}
+  <script src="{{ url_for('static', filename='js/theme.js', v='night-mode-2') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css', v='night-mode-3') }}">
+  {% if request.endpoint == 'home' %}<link rel="stylesheet" href="{{ url_for('static', filename='css/terminal-home.css', v='night-mode-2') }}">{% endif %}
   {% if request.endpoint == 'resume' %}<link rel="stylesheet" href="{{ url_for('static', filename='css/resume.css') }}">{% endif %}
   <script src="{{ url_for('static', filename='js/terminal.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/scroll-motion.js') }}" defer></script>
@@ -46,12 +46,12 @@
     {% block content %}{% endblock %}
   </main>
   <div class="scene-controls shell">
-    <button id="scene-toggle" type="button" aria-pressed="false" hidden>Motion: paused</button>
-    <button id="theme-toggle" class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Light theme" title="Switch to light theme" hidden>
-      <svg class="theme-day" viewBox="0 0 24 24" aria-hidden="true"><circle cx="14" cy="9" r="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M14 1v2m0 12v2M6 9H4m20 0h-2M8 3l1.5 1.5M20 3l-1.5 1.5" stroke="currentColor" stroke-width="1.7"/><path d="M5 20a4 4 0 1 1 1-7.9 5 5 0 0 1 9.5 1.9h1a3 3 0 1 1 0 6Z" fill="currentColor"/></svg>
-      <svg class="theme-night" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3a9 9 0 1 0 5 15A8 8 0 0 1 16 3Z" fill="currentColor"/><path d="m20 3 .7 2.3L23 6l-2.3.7L20 9l-.7-2.3L17 6l2.3-.7Z" fill="currentColor"/></svg>
-      <span class="theme-knob" aria-hidden="true"></span>
+    <button id="scene-toggle" type="button" aria-pressed="false" hidden>
+      <svg data-motion-play viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M9 6v12l10-6z" fill="currentColor"/></svg>
+      <svg data-motion-pause viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M7 6h4v12H7zm6 0h4v12h-4z" fill="currentColor"/></svg>
+      <span class="scene-toggle-label">Motion: paused</span>
     </button>
+    {% if request.endpoint != 'home' %}{% include 'partials/theme-toggle.html' %}{% endif %}
   </div>
   {% block footer %}
     <footer class="shell site-footer">

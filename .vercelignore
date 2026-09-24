@@ -1,0 +1,12 @@
+.agents/
+.codex/
+.impeccable/
+.venv/
+venv/
+__pycache__/
+skills/
+workshop-fa26-vibe-coding/
+AGENTS.md
+README.md
+IMPLEMENTATION.md
+*.pyc

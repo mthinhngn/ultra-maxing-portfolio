@@ -7,6 +7,9 @@ if (video && motionToggle) initializeBackground(video, motionToggle);
 function initializeBackground(video, button) {
   let motionEnabled = true;
   let failed = false;
+  const label = button.querySelector('.scene-toggle-label');
+  const playIcon = button.querySelector('[data-motion-play]');
+  const pauseIcon = button.querySelector('[data-motion-pause]');
 
   const updateControl = () => {
     const running = !video.paused;
@@ -14,7 +17,11 @@ function initializeBackground(video, button) {
     video.dataset.sceneStatus = failed ? 'unavailable' : running ? 'ready' : 'static';
     button.hidden = !desktopMedia.matches || failed;
     button.setAttribute('aria-pressed', String(running));
-    button.textContent = running ? 'Motion: running / pause' : 'Motion: paused / play';
+    button.setAttribute('aria-label', running ? 'Pause background motion' : 'Play background motion');
+    button.title = running ? 'Pause background motion' : 'Play background motion';
+    label.textContent = running ? 'Motion: running / pause' : 'Motion: paused / play';
+    playIcon.toggleAttribute('hidden', running);
+    pauseIcon.toggleAttribute('hidden', !running);
   };
 
   const synchronize = async () => {

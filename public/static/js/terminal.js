@@ -4,20 +4,9 @@ if (portfolioPrompt) initializePortfolio(portfolioPrompt);
 const portfolioTerminal = document.querySelector('.portfolio-terminal');
 if (portfolioTerminal) initializeTerminalResize(portfolioTerminal);
 
-const UNKNOWN_REPLY = 'I couldn’t match that request. Try /projects, /experience, /about, or /contact.';
+const UNKNOWN_REPLY = 'I couldn’t match that request. Try /help, /projects, /skills, /experience, /whoami, or /contact.';
 const WORD_REVEAL_TRANSITION_MS = 380;
-
-function commandDistance(left, right) {
-  let row = Array.from({ length: right.length + 1 }, (_, index) => index);
-  for (let i = 1; i <= left.length; i += 1) {
-    const next = [i];
-    for (let j = 1; j <= right.length; j += 1) {
-      next[j] = Math.min(next[j - 1] + 1, row[j] + 1, row[j - 1] + (left[i - 1] !== right[j - 1]));
-    }
-    row = next;
-  }
-  return row[right.length];
-}
+const GENERATION_STATUS_MS = 680;
 
 function normalizeQuery(value) {
   return value.normalize('NFKD')
@@ -33,17 +22,6 @@ function initializePortfolio(form) {
   const options = [...menu.querySelectorAll('[role="option"]')];
   const transcript = document.querySelector('#terminal-log');
   const output = document.querySelector('#session-output');
-  output.addEventListener('pointermove', (event) => {
-    if (event.pointerType !== 'mouse') return;
-    if (output.scrollHeight <= output.clientHeight + 1) {
-      output.classList.remove('is-scrollbar-hovered');
-      return;
-    }
-    const distanceFromRightEdge = output.getBoundingClientRect().right - event.clientX;
-    const hoverZone = output.classList.contains('is-scrollbar-hovered') ? 42 : 8;
-    output.classList.toggle('is-scrollbar-hovered', distanceFromRightEdge >= 0 && distanceFromRightEdge <= hoverZone);
-  });
-  output.addEventListener('pointerleave', () => output.classList.remove('is-scrollbar-hovered'));
   const welcome = document.querySelector('#welcome-screen');
   const session = document.querySelector('#portfolio-session');
   const projectTemplate = document.querySelector('#reply-projects');
@@ -51,35 +29,31 @@ function initializePortfolio(form) {
   const announcement = document.querySelector('#terminal-announcement');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const previousResponses = new Map();
-  const topicNames = {
-    experience: 'Experience',
-    projects: 'Projects',
-    about: 'About me',
-    contact: 'Contact',
-  };
-  const topicAliases = new Map([
-    ['experience', 'experience'],
-    ['work experience', 'experience'],
-    ['project', 'projects'],
-    ['projects', 'projects'],
-    ['selected projects', 'projects'],
-    ['my projects', 'projects'],
-    ['about', 'about'],
-    ['about me', 'about'],
-    ['contact', 'contact'],
-    ['get in touch', 'contact'],
-  ]);
-  const topicCommands = Object.keys(topicNames);
+  const topicNames = Object.fromEntries(options.map(option => [
+    option.dataset.command,
+    option.dataset.label,
+  ]));
+  const topicAliases = new Map();
+  options.forEach(option => {
+    const topic = option.dataset.command;
+    topicAliases.set(topic, topic);
+    (option.dataset.aliases || '').split(',').forEach(alias => {
+      const normalizedAlias = normalizeQuery(alias);
+      if (normalizedAlias) topicAliases.set(normalizedAlias, topic);
+    });
+  });
   let selected = 0;
   let activeTyping = null;
-  let keyboardSelection = false;
+  let activeGeneration = null;
+  let explicitSuggestionSelection = false;
 
-  function highlight(index) {
+  function highlight(index, scrollIntoView = true) {
     selected = (index + options.length) % options.length;
     options.forEach((option, optionIndex) => {
       option.setAttribute('aria-selected', String(optionIndex === selected));
     });
     input.setAttribute('aria-activedescendant', options[selected].id);
+    if (scrollIntoView) options[selected].scrollIntoView({ block: 'nearest' });
   }
 
   function setMenu(open) {
@@ -112,13 +86,9 @@ function initializePortfolio(form) {
     const exactTopic = topicAliases.get(query);
     if (exactTopic) return topicResolution(exactTopic);
 
-    if (/(^| )(show|list|all|my|selected|portfolio) projects?($| )/.test(query)) {
-      return topicResolution('projects');
-    }
-
     const matchingProject = projectArticles.find(article => {
       const title = normalizeQuery(article.dataset.projectTitle);
-      return title && query.includes(title);
+      return title && query === title;
     });
     if (matchingProject) {
       const title = matchingProject.dataset.projectTitle;
@@ -128,19 +98,6 @@ function initializePortfolio(form) {
         label: title,
         article: matchingProject,
       };
-    }
-
-    if (query.includes('experience')) return topicResolution('experience');
-    if (query.includes('about me') || query === 'about thinh') return topicResolution('about');
-    if (query.includes('contact') || query.includes('get in touch')) return topicResolution('contact');
-
-    if (/^[a-z]{4,12}$/.test(query)) {
-      const candidates = topicCommands
-        .map(topic => ({ topic, distance: commandDistance(query, topic) }))
-        .sort((left, right) => left.distance - right.distance);
-      if (candidates[0].distance <= 2 && candidates[0].distance < candidates[1].distance) {
-        return topicResolution(candidates[0].topic);
-      }
     }
 
     return {
@@ -154,14 +111,21 @@ function initializePortfolio(form) {
     activeTyping?.finish();
   }
 
-  function revealReply(reply) {
+  function finishActiveGeneration() {
+    activeGeneration?.finish();
+  }
+
+  function revealReply(reply, onComplete) {
     const replyContent = reply.querySelector('.conversation-reply-content');
     const walker = document.createTreeWalker(replyContent, NodeFilter.SHOW_TEXT);
     const textNodes = [];
     while (walker.nextNode()) {
       if (walker.currentNode.textContent.trim()) textNodes.push(walker.currentNode);
     }
-    if (!textNodes.length) return;
+    if (!textNodes.length) {
+      onComplete?.();
+      return;
+    }
 
     const generatedWords = [];
     textNodes.forEach(node => {
@@ -180,8 +144,17 @@ function initializePortfolio(form) {
       node.replaceWith(fragment);
     });
 
-    if (!generatedWords.length) return;
+    if (!generatedWords.length) {
+      onComplete?.();
+      return;
+    }
     reply.setAttribute('aria-busy', 'true');
+    let completed = false;
+    function revealWord(word) {
+      word.classList.add('is-visible');
+      word.closest('p')?.classList.add('has-generated-content');
+    }
+
     const targetRevealDuration = reducedMotion.matches
       ? Math.min(1300, Math.max(700, generatedWords.length * 24))
       : Math.min(2600, Math.max(800, generatedWords.length * 48));
@@ -189,14 +162,17 @@ function initializePortfolio(form) {
     const revealTimers = [];
     const typing = {
       finish() {
+        if (completed) return;
+        completed = true;
         revealTimers.forEach(timer => window.clearTimeout(timer));
-        generatedWords.forEach(word => word.classList.add('is-visible'));
+        generatedWords.forEach(revealWord);
         reply.removeAttribute('aria-busy');
         if (activeTyping === typing) activeTyping = null;
+        onComplete?.();
       },
     };
     generatedWords.forEach((word, index) => {
-      const timer = window.setTimeout(() => word.classList.add('is-visible'), (index + 1) * revealDelay);
+      const timer = window.setTimeout(() => revealWord(word), (index + 1) * revealDelay);
       revealTimers.push(timer);
     });
     const finishTimer = window.setTimeout(
@@ -234,8 +210,12 @@ function initializePortfolio(form) {
       content.classList.add('conversation-error');
       content.textContent = UNKNOWN_REPLY;
     } else if (resolution.type === 'project') {
+      reply.dataset.projectTitle = resolution.article.dataset.projectTitle;
       content.append(resolution.article.cloneNode(true));
     } else {
+      if (resolution.topic === 'projects' && projectArticles[0]) {
+        reply.dataset.projectTitle = projectArticles[0].dataset.projectTitle;
+      }
       const template = document.querySelector('#reply-' + resolution.topic);
       content.append(template.content.cloneNode(true));
     }
@@ -244,13 +224,70 @@ function initializePortfolio(form) {
     return reply;
   }
 
+  function createGeneratingReply() {
+    const reply = document.createElement('div');
+    reply.className = 'conversation-reply conversation-reply-generating';
+    reply.setAttribute('aria-hidden', 'true');
+
+    const icon = document.createElement('span');
+    icon.className = 'generating-icon';
+    for (let index = 0; index < 16; index += 1) {
+      const dot = document.createElement('span');
+      dot.className = 'generating-dot';
+      dot.style.setProperty('--dot-index', String(index));
+      icon.append(dot);
+    }
+
+    const label = document.createElement('span');
+    label.className = 'generating-label';
+    label.textContent = 'Generating...';
+    reply.append(icon, label);
+    return reply;
+  }
+
+  function appendGenerationComplete(entry, startedAt) {
+    if (entry.querySelector('.conversation-generation-meta')) return;
+
+    const elapsedSeconds = ((performance.now() - startedAt) / 1000).toFixed(1);
+    const generatedAt = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    const status = document.createElement('p');
+    status.className = 'conversation-generation-meta';
+    status.textContent = 'Generated for ' + elapsedSeconds + 's · done ' + generatedAt;
+    entry.append(status);
+  }
+
+  function beginReplyGeneration(entry, resolution, pendingReply) {
+    const startedAt = performance.now();
+    let timer;
+    const generation = {
+      finish() {
+        window.clearTimeout(timer);
+        if (activeGeneration === generation) activeGeneration = null;
+        if (!pendingReply.isConnected) return;
+
+        const reply = createReply(resolution);
+        pendingReply.replaceWith(reply);
+        entry.removeAttribute('aria-busy');
+        revealReply(reply, resolution.type === 'unknown'
+          ? () => appendGenerationComplete(entry, startedAt)
+          : undefined);
+        announcement.textContent = 'Added a response for ' + resolution.label + '.';
+      },
+    };
+
+    activeGeneration = generation;
+    timer = window.setTimeout(generation.finish, GENERATION_STATUS_MS);
+    announcement.textContent = 'Generating response for ' + resolution.label + '.';
+  }
+
   function resetConversation() {
+    finishActiveGeneration();
     finishActiveTyping();
     transcript.replaceChildren();
     previousResponses.clear();
     input.value = '';
     selected = 0;
-    keyboardSelection = false;
+    explicitSuggestionSelection = false;
     setMenu(true);
     input.focus();
     announcement.textContent = 'Conversation cleared.';
@@ -260,23 +297,26 @@ function initializePortfolio(form) {
     const query = value.trim();
     if (!query) return;
 
-    finishActiveTyping();
     const resolution = resolveRequest(query);
-    input.value = '';
-    setMenu(false);
-    keyboardSelection = false;
-    selected = 0;
-
     if (resolution.type === 'clear') {
       resetConversation();
       return;
     }
 
+    finishActiveGeneration();
+    finishActiveTyping();
+    input.value = '';
+    setMenu(false);
+    explicitSuggestionSelection = false;
+    selected = 0;
+
     const previousEntry = previousResponses.get(resolution.key);
     if (previousEntry) {
       scrollToEntry(previousEntry);
       input.focus();
-      announcement.textContent = 'Showing the earlier ' + resolution.label + ' response.';
+      announcement.textContent = previousEntry.hasAttribute('aria-busy')
+        ? 'Generating response for ' + resolution.label + '.'
+        : 'Showing the earlier ' + resolution.label + ' response.';
       return;
     }
 
@@ -294,14 +334,14 @@ function initializePortfolio(form) {
     promptText.textContent = query;
     request.append(promptLabel, promptText);
 
-    const reply = createReply(resolution);
-    entry.append(request, reply);
+    const pendingReply = createGeneratingReply();
+    entry.setAttribute('aria-busy', 'true');
+    entry.append(request, pendingReply);
     transcript.append(entry);
     previousResponses.set(resolution.key, entry);
     scrollToEntry(entry);
     input.focus();
-    revealReply(reply);
-    announcement.textContent = 'Added a response for ' + resolution.label + '.';
+    beginReplyGeneration(entry, resolution, pendingReply);
   }
 
   document.querySelector('#continue-button').addEventListener('click', startSession);
@@ -315,25 +355,30 @@ function initializePortfolio(form) {
   input.addEventListener('focus', () => setMenu(true));
   input.addEventListener('click', () => setMenu(true));
   input.addEventListener('input', () => {
-    keyboardSelection = false;
+    explicitSuggestionSelection = false;
     selected = 0;
     setMenu(true);
   });
   input.addEventListener('keydown', event => {
     if (event.key === 'Escape') {
       setMenu(false);
-      keyboardSelection = false;
+      explicitSuggestionSelection = false;
     }
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       const wasClosed = menu.hidden;
       setMenu(true);
       highlight(wasClosed ? 0 : selected + (event.key === 'ArrowDown' ? 1 : -1));
-      keyboardSelection = true;
+      explicitSuggestionSelection = true;
     }
   });
 
-  options.forEach(option => {
+  options.forEach((option, optionIndex) => {
+    option.addEventListener('pointermove', event => {
+      if (event.pointerType !== 'mouse') return;
+      if (selected !== optionIndex) highlight(optionIndex, false);
+      explicitSuggestionSelection = true;
+    });
     option.addEventListener('mousedown', event => event.preventDefault());
     option.addEventListener('click', () => send('/' + option.dataset.command));
   });
@@ -346,7 +391,7 @@ function initializePortfolio(form) {
   form.addEventListener('submit', event => {
     event.preventDefault();
     const value = input.value.trim();
-    if (!menu.hidden && (!value || keyboardSelection)) {
+    if (!menu.hidden && (!value || explicitSuggestionSelection)) {
       send('/' + options[selected].dataset.command);
     } else if (value) {
       send(value);
@@ -363,6 +408,8 @@ function initializePortfolio(form) {
 function initializeTerminalResize(terminal) {
   const resizeControl = terminal.querySelector('#terminal-resize');
   const maximizeControl = terminal.querySelector('#terminal-maximize');
+  const maximizeIcon = maximizeControl.querySelector('[data-maximize-icon]');
+  const restoreIcon = maximizeControl.querySelector('[data-restore-icon]');
   const layout = document.querySelector('#main-content');
   const pointerResize = matchMedia('(min-width: 601px) and (pointer: fine)');
   const minimumSize = { width: 480, height: 380 };
@@ -382,11 +429,12 @@ function initializeTerminalResize(terminal) {
       terminal.style.removeProperty('--terminal-content-height');
     }
     terminal.classList.toggle('is-maximized', maximized);
+    document.body.classList.toggle('terminal-maximized', maximized);
     maximizeControl.setAttribute('aria-pressed', String(maximized));
     maximizeControl.setAttribute('aria-label', maximized ? 'Restore terminal size' : 'Maximize terminal');
     maximizeControl.title = maximized ? 'Restore terminal size' : 'Maximize terminal';
-    maximizeControl.querySelector('[data-maximize-icon]').hidden = maximized;
-    maximizeControl.querySelector('[data-restore-icon]').hidden = !maximized;
+    maximizeIcon.toggleAttribute('hidden', maximized);
+    restoreIcon.toggleAttribute('hidden', !maximized);
   }
 
   function availableBounds() {

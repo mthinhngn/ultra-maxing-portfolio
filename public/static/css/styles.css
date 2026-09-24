@@ -1,18 +1,19 @@
 :root {
   color-scheme: dark;
-  --bg: #000;
-  --surface: #030606;
-  --text: #ecebe6;
-  --muted: #a3b0b2;
-  --line: #263135;
-  --line-strong: #526064;
-  --accent: #8cdce2;
-  --green: #91c79b;
-  --error: #ef8a8a;
-  --contact-email: #43dce8;
-  --contact-github: #c084fc;
-  --contact-linkedin: #42df83;
-  --contact-resume: #ff5f87;
+  --bg: #0b1117;
+  --surface: #111a22;
+  --text: #e5ebee;
+  --muted: #a4b0b7;
+  --line: #273640;
+  --line-strong: #50616b;
+  --accent: #71d5e2;
+  --accent-rgb: 113 213 226;
+  --green: #8bc99e;
+  --error: #e88696;
+  --contact-email: #61c8b8;
+  --contact-github: #b69be8;
+  --contact-linkedin: #8bc99e;
+  --contact-resume: #e7879c;
   --mono: Consolas, "Liberation Mono", "Courier New", monospace;
   --sans: "Segoe UI", Arial, sans-serif;
 }
@@ -34,8 +35,8 @@ body {
   background-color: var(--bg);
   background-image: repeating-linear-gradient(
     0deg,
-    rgb(140 220 226 / 0.035) 0,
-    rgb(140 220 226 / 0.035) 1px,
+    rgb(var(--accent-rgb) / 0.035) 0,
+    rgb(var(--accent-rgb) / 0.035) 1px,
     transparent 1px,
     transparent 7px
   );
@@ -180,6 +181,7 @@ body {
 }
 
 .theme-toggle[hidden] { display: none; }
+.theme-animation[hidden] { display: none; }
 .theme-toggle svg { position: absolute; top: 4px; width: 14px; height: 14px; }
 .theme-day { left: 4px; opacity: 0; }
 .theme-night { right: 4px; }
@@ -193,35 +195,48 @@ body {
   background: var(--text);
   transition: transform 180ms ease;
 }
+.theme-animation {
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  left: 4px;
+  width: 36px;
+  height: 32px;
+  pointer-events: none;
+}
+:root[data-theme="dark"] .theme-animation { filter: invert(1); }
+.theme-toggle.is-animating > svg,
+.theme-toggle.is-animating .theme-knob { opacity: 0; }
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #f7f6f2;
-  --surface: #fffefa;
-  --text: #202632;
-  --muted: #505b6a;
-  --line: #ccd0d6;
-  --line-strong: #858e9d;
-  --accent: #264da6;
-  --green: #33764a;
-  --error: #a42d3c;
-  --contact-email: #264da6;
-  --contact-github: #675a91;
-  --contact-linkedin: #3c7451;
-  --contact-resume: #a34f69;
+  --bg: #f5f3ec;
+  --surface: #fffdf7;
+  --text: #30343a;
+  --muted: #62666a;
+  --line: #d2cfc4;
+  --line-strong: #99968d;
+  --accent: #355d97;
+  --accent-rgb: 53 93 151;
+  --green: #41694f;
+  --error: #964f5b;
+  --contact-email: #376d67;
+  --contact-github: #665f80;
+  --contact-linkedin: #41694f;
+  --contact-resume: #895564;
 }
 
 [data-theme="light"] .theme-knob { transform: translateX(22px); }
 [data-theme="light"] .theme-day { opacity: 1; }
 [data-theme="light"] .theme-night { opacity: 0; }
-[data-theme="light"] .terminal-frame { background: rgb(247 246 242 / 0.88); }
+[data-theme="light"] .terminal-frame { background: rgb(245 243 236 / 0.88); }
 [data-theme="light"] .identity-panel h1 img { filter: invert(1); }
 [data-theme="light"] .terminal-scene { opacity: 0.28; }
 [data-theme="light"] .terminal-scene video {
   filter: grayscale(1) invert(1) sepia(0.15) hue-rotate(175deg);
 }
 [data-theme="light"] .terminal-scene::after {
-  background: linear-gradient(90deg, rgb(247 246 242 / 0.4), transparent, rgb(247 246 242 / 0.2));
+  background: linear-gradient(90deg, rgb(245 243 236 / 0.4), transparent, rgb(245 243 236 / 0.2));
 }
 [data-theme="light"] input::placeholder { color: var(--muted); }
 
@@ -233,6 +248,8 @@ body {
   font: 12px var(--mono);
   cursor: pointer;
 }
+
+#scene-toggle svg { display: none; }
 
 #scene-toggle:hover,
 #scene-toggle[aria-pressed="true"] {
@@ -592,7 +609,7 @@ summary:focus-visible {
 }
 
 .prompt input::placeholder {
-  color: #829094;
+  color: var(--muted);
   opacity: 1;
 }
 
@@ -699,7 +716,7 @@ summary:focus-visible {
 .project:hover,
 .experience-row:hover {
   border-color: var(--line-strong);
-  background: linear-gradient(90deg, rgb(140 220 226 / 0.035), transparent 48%);
+  background: linear-gradient(90deg, rgb(var(--accent-rgb) / 0.035), transparent 48%);
 }
 
 .project:hover .project-number,

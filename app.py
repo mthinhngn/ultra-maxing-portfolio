@@ -12,6 +12,24 @@ EXPERIENCE = (
     {"organization": "SJSU College of Engineering", "role": "Software Engineering Intern", "date": "MAY 2026 - AUG 2026", "description": "Built an Express.js API for YouTube playback on Raspberry Pi speakers, with retries and Docker, Prometheus, and Grafana monitoring."},
     {"organization": "Spartan Racing", "role": "Software Engineering Intern", "date": "AUG 2025 - MAY 2026", "description": "Built pytest simulations for VCU algorithms, automated with GitHub Actions; added hardware-in-the-loop checks for ECU timing and CAN bus."},
 )
+TERMINAL_COMMANDS = (
+    {"command": "help", "label": "Command index", "aliases": ("commands",), "description": "peek at the command lineup"},
+    {"command": "experience", "label": "Experience", "aliases": ("work experience",), "description": "where I put my skills to work"},
+    {"command": "projects", "label": "Projects", "aliases": ("project", "selected projects", "my projects"), "description": "take a look at things I've built"},
+    {"command": "skills", "label": "Skills", "aliases": ("toolkit",), "description": "the tech in my toolbox"},
+    {"command": "whoami", "label": "Who am I", "aliases": ("about me",), "description": "meet the human behind the keyboard"},
+    {"command": "contact", "label": "Contact", "aliases": ("get in touch",), "description": "drop me a hello"},
+    {"command": "clear", "label": "Clear conversation", "aliases": (), "description": "wipe the slate and start fresh"},
+)
+TERMINAL_COMMAND_OPTIONS = tuple(
+    command for command in TERMINAL_COMMANDS if command["command"] != "clear"
+)
+SKILL_GROUPS = (
+    {"key": "languages", "label": "Languages", "skills": ("Python", "Java", "C++", "JavaScript/TypeScript", "HTML/CSS", "Bash", "Go (Golang)")},
+    {"key": "frameworks", "label": "Frameworks", "skills": ("React", "FastAPI", "Node.js", "Next.js", "Express.js", "Flask", "JUnit")},
+    {"key": "databases", "label": "Databases & Storage", "skills": ("Postgres", "MongoDB", "Oracle", "Redis", "S3")},
+    {"key": "infrastructure", "label": "Infra & Tools", "skills": ("Docker", "Kubernetes", "Terraform", "Linux", "GCP", "Git", "AWS", "CI/CD", "Prometheus", "Grafana")},
+)
 
 
 def create_app() -> Flask:
@@ -21,7 +39,14 @@ def create_app() -> Flask:
 
     @app.get("/")
     def home() -> str:
-        return render_template("index.html", projects=PROJECTS, experience=EXPERIENCE)
+        return render_template(
+            "index.html",
+            projects=PROJECTS,
+            experience=EXPERIENCE,
+            terminal_commands=TERMINAL_COMMANDS,
+            terminal_command_options=TERMINAL_COMMAND_OPTIONS,
+            skill_groups=SKILL_GROUPS,
+        )
 
     @app.get("/projects")
     def projects() -> str:
